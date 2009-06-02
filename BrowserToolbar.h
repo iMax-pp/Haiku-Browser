@@ -10,7 +10,6 @@
 #ifndef BROWSER_TOOLBAR_H
 #define BROWSER_TOOLBAR_H
 
-#include <Bitmap.h>
 #include <Toolbar.h>
 
 class BrowserToolbar : public WToolbar {
@@ -19,7 +18,6 @@ class BrowserToolbar : public WToolbar {
 		virtual ~BrowserToolbar();
 
 	private:
-		BBitmap* _RetrieveBitmap(const char *name);
 };
 
 #endif // BROWSER_TOOLBAR_H
