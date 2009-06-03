@@ -12,9 +12,8 @@
 
 
 #include <Application.h>
-#include <Messenger.h>
 
-#include <stdio.h>
+// #include <stdio.h>
 
 #include "BrowserWindow.h"
 
@@ -28,13 +27,16 @@ class Tranquility : public BApplication {
 		void MessageReceived(BMessage *message);
 		void ReadyToRun();
 		bool QuitRequested();
+
+		BList *ChannelList();
+
   private:
-		BMessenger *fMessenger;
 		BrowserWindow *fBrowserWindow;
+		BList *fChannelList;
 };
 
 
-//#define my_app dynamic_cast<Tranquility*>(be_app)
+#define my_app dynamic_cast<Tranquility*>(be_app)
 
 
 #endif	// TRANQUILITY_H

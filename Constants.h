@@ -29,5 +29,8 @@ const static uint32 kMsgNavReload = 'relo';
 const static uint32 kMsgNavHome = 'home';
 const static uint32 kMsgNavStop = 'stop';
 
+const static uint32 kMsgNewTab = 'open';
+const static uint32 kMsgCloseTab = 'clos';
+
 #endif	// CONSTANTS_H
 

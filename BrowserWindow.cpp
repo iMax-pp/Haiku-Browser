@@ -8,19 +8,18 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #include "BrowserWindow.h"
+#include "Constants.h"
 #include "ProxyView.h"
 
 #include <Application.h>
 #include <GroupLayout.h>
 #include <GroupLayoutBuilder.h>
 
-#include <stdio.h>
 
 BrowserWindow::BrowserWindow()
 	: BWindow(BRect(100, 100, 600, 600), "Tranquility", B_DOCUMENT_WINDOW, 0)
 {
 	fToolbar = new BrowserToolbar();
-
 	fProxyView = new ProxyView(Bounds(), "Proxy");
 
 	// Set the layout
@@ -30,6 +29,12 @@ BrowserWindow::BrowserWindow()
 		.Add(fToolbar)
 		.Add(fProxyView)
 	);
+
+	AddShortcut('N', B_COMMAND_KEY, new BMessage(kMsgNewTab), this);
+	AddShortcut('W', B_COMMAND_KEY, new BMessage(kMsgCloseTab), this);
+	AddShortcut('Q', B_COMMAND_KEY, new BMessage(B_QUIT_REQUESTED), this);
+
+	fProxyView->StartRenderBoy();
 }
 
 
@@ -42,6 +47,15 @@ void
 BrowserWindow::MessageReceived(BMessage *message)
 {
 	switch (message->what) {
+		case kMsgNewTab: {
+			fProxyView->StartRenderBoy();
+			break;
+		}
+
+		case kMsgCloseTab:
+			fProxyView->StopRenderBoy();
+			break;
+
 		default:
 			BWindow::MessageReceived(message);
 			break;
@@ -52,16 +66,9 @@ BrowserWindow::MessageReceived(BMessage *message)
 bool
 BrowserWindow::QuitRequested()
 {
+	fProxyView->StopRenderBoy();
 	be_app->PostMessage(B_QUIT_REQUESTED);
+
 	return true;
 }
 
-
-void
-BrowserWindow::SetViewBitmap(BBitmap *bitmap)
-{
-	if (Lock()) {
-		fProxyView->SetViewBitmap(bitmap);
-		Unlock();
-	}
-}

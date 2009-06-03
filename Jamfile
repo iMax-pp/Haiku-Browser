@@ -8,6 +8,7 @@ UseLibraryHeaders icon ;
 Application Tranquility :
 	BrowserToolbar.cpp
 	BrowserWindow.cpp
+	ProxyViewManager.cpp
 	ProxyView.cpp
 	Tranquility.cpp
 

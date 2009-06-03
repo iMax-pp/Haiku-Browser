@@ -8,25 +8,25 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #include "ProxyView.h"
+#include "BitmapHelper.h"
+#include "BrowserWindow.h"
 #include "Constants.h"
 
-#include <Application.h>
-#include <MessageFilter.h>
-#include <String.h>
 #include <Window.h>
 
-#include <stdio.h>
 #include <syslog.h>
 
 
 ProxyView::ProxyView(BRect frame, const char *name)
-	: BView(frame, name, B_FOLLOW_ALL_SIDES, B_WILL_DRAW|B_FRAME_EVENTS)
+	: BView(frame, name, B_FOLLOW_ALL_SIDES, B_WILL_DRAW|B_FRAME_EVENTS),
+	fProxyViewManager(new ProxyViewManager(this))
 {
 }
 
 
 ProxyView::~ProxyView()
 {
+	delete fProxyViewManager;
 }
 
 
@@ -59,10 +59,54 @@ ProxyView::MouseMoved(BPoint point, uint32 transit, const BMessage* message)
 
 
 void
+ProxyView::StartRenderBoy()
+{
+	fProxyViewManager->Run(dynamic_cast<BrowserWindow *>(Window()));
+}
+
+
+void
+ProxyView::StopRenderBoy()
+{
+	fProxyViewManager->Quit();
+}
+
+
+void
+ProxyView::DrawSadTab(const char *error)
+{
+	BBitmap *sadTab = RetrieveBitmap("sad_tab.png", BRect(0, 0, 255, 255));
+
+	if (Window()->Lock()) {
+		MovePenTo(Bounds().Width() / 2 - 127, Bounds().Height() / 2 - 177);
+		DrawBitmap(sadTab);
+
+		MovePenTo(Bounds().Width() / 2 - 45, Bounds().Height() / 2 + 55);
+		BFont font;
+		GetFont(&font);
+		font.SetSize(18.0);
+		font.SetFace(B_BOLD_FACE);
+		SetFont(&font, B_FONT_SIZE | B_FONT_FACE);
+		SetLowColor(0, 0, 0);
+		SetHighColor(255, 255, 255);
+		DrawString("Aw, Snap!");
+
+		MovePenTo(Bounds().Width() / 2 - 90, Bounds().Height() / 2 + 70);
+		font.SetSize(12.0);
+		font.SetFace(B_REGULAR_FACE);
+		SetFont(&font, B_FONT_SIZE | B_FONT_FACE);
+		DrawString(error);
+
+		Window()->Unlock();
+	}
+}
+
+
+void
 ProxyView::_ForwardCurrentMessage()
 {
 	BMessage forward(kMsgForward);
 	forward.AddMessage("original", Window()->CurrentMessage());
-	be_app->PostMessage(&forward);
+	be_app->PostMessage(&forward, fProxyViewManager);
 }
 

@@ -23,11 +23,7 @@ class BrowserWindow : public BWindow {
 		void MessageReceived(BMessage *message);
 		bool QuitRequested();
 
-		void SetViewBitmap(BBitmap *bitmap);
-
 	private:
-		void _BuildToolbar();
-
 		BrowserToolbar *fToolbar;
 		ProxyView *fProxyView;
 };
