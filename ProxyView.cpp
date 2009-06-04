@@ -18,15 +18,13 @@
 
 
 ProxyView::ProxyView(BRect frame, const char *name)
-	: BView(frame, name, B_FOLLOW_ALL_SIDES, B_WILL_DRAW|B_FRAME_EVENTS),
-	fProxyViewManager(new ProxyViewManager(this))
+	: BView(frame, name, B_FOLLOW_ALL_SIDES, B_WILL_DRAW|B_FRAME_EVENTS)
 {
 }
 
 
 ProxyView::~ProxyView()
 {
-	delete fProxyViewManager;
 }
 
 
@@ -61,7 +59,8 @@ ProxyView::MouseMoved(BPoint point, uint32 transit, const BMessage* message)
 void
 ProxyView::StartRenderBoy()
 {
-	fProxyViewManager->Run(dynamic_cast<BrowserWindow *>(Window()));
+	fProxyViewManager = new ProxyViewManager(this, dynamic_cast<BrowserWindow *>(Window()));
+	fProxyViewManager->Run();
 }
 
 
@@ -69,6 +68,7 @@ void
 ProxyView::StopRenderBoy()
 {
 	fProxyViewManager->Quit();
+	delete fProxyViewManager;
 }
 
 

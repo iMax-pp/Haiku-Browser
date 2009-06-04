@@ -22,11 +22,11 @@
 #include <syslog.h>
 
 
-ProxyViewManager::ProxyViewManager(ProxyView *proxyView)
+ProxyViewManager::ProxyViewManager(ProxyView *proxyView, BrowserWindow *browserWindow)
 	: BHandler(),
 	fMessenger(NULL),
 	fProxyView(proxyView),
-	fBrowserWindow(NULL)
+	fBrowserWindow(browserWindow)
 {
 }
 
@@ -94,10 +94,8 @@ ProxyViewManager::MessageReceived(BMessage *message)
 
 
 void
-ProxyViewManager::Run(BrowserWindow *browserWindow)
+ProxyViewManager::Run()
 {
-	fBrowserWindow = browserWindow;
-
 	BMessage startMsg(kMsgStartRenderApp);
 	startMsg.AddRect("renderFrame", fBrowserWindow->Bounds());
 	startMsg.AddInt32("teamID", my_app->Team());

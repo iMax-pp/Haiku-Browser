@@ -101,6 +101,14 @@ Tranquility::QuitRequested()
 {
 	be_roster->StopWatching(be_app_messenger);
 
+	Channel *link;
+	for (int32 i = 0; i < fChannelList->CountItems(); i++) {
+		link = static_cast<Channel *>(fChannelList->ItemAt(i));
+		link->renderBoy = -1;
+		link->proxyViewManager->Quit();
+		delete link->proxyViewManager;
+	}
+
 	return true;
 }
 

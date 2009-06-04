@@ -27,12 +27,12 @@ class ProxyView;
 
 class ProxyViewManager : public BHandler {
 	public:
-		ProxyViewManager(ProxyView *proxyView);
+		ProxyViewManager(ProxyView *proxyView, BrowserWindow *browserWindow);
 		~ProxyViewManager();
 
 		void MessageReceived(BMessage *message);
 
-		void Run(BrowserWindow *browserWindow);
+		void Run();
 		void Quit();
 
 	private:

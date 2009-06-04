@@ -32,7 +32,6 @@ BrowserWindow::BrowserWindow()
 
 	AddShortcut('N', B_COMMAND_KEY, new BMessage(kMsgNewTab), this);
 	AddShortcut('W', B_COMMAND_KEY, new BMessage(kMsgCloseTab), this);
-	AddShortcut('Q', B_COMMAND_KEY, new BMessage(B_QUIT_REQUESTED), this);
 
 	fProxyView->StartRenderBoy();
 }
@@ -66,7 +65,6 @@ BrowserWindow::MessageReceived(BMessage *message)
 bool
 BrowserWindow::QuitRequested()
 {
-	fProxyView->StopRenderBoy();
 	be_app->PostMessage(B_QUIT_REQUESTED);
 
 	return true;
