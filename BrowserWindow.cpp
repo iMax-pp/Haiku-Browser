@@ -46,10 +46,9 @@ void
 BrowserWindow::MessageReceived(BMessage *message)
 {
 	switch (message->what) {
-		case kMsgNewTab: {
+		case kMsgNewTab:
 			fProxyView->StartRenderBoy();
 			break;
-		}
 
 		case kMsgCloseTab:
 			fProxyView->StopRenderBoy();

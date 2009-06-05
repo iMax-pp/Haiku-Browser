@@ -12,8 +12,6 @@
 #include "BrowserWindow.h"
 #include "Constants.h"
 
-#include <Window.h>
-
 #include <syslog.h>
 
 

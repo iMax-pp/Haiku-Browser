@@ -56,7 +56,8 @@ void
 Tranquility::MessageReceived(BMessage *message)
 {
 	switch(message->what) {
-		case kMsgBitmapData: {
+		case kMsgBitmapData:
+		{
 			Channel *link;
 			team_id renderTeam;
 			renderTeam = message->ReturnAddress().Team();
@@ -70,7 +71,8 @@ Tranquility::MessageReceived(BMessage *message)
 			break;
 		}
 
-		case B_SOME_APP_QUIT: {
+		case B_SOME_APP_QUIT:
+		{
 			BString sig;
 			if (message->FindString("be:signature", &sig) == B_OK) {
 				if (sig.Compare(kRenderAppSignature) == 0) {
