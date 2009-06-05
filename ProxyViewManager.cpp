@@ -104,7 +104,10 @@ ProxyViewManager::Run()
 	if (be_roster->Launch(kRenderAppSignature, &startMsg, &renderTeam) != B_OK)
 		fProxyView->DrawSadTab("There was an error trying to launch the render process!");
 	else {
-		my_app->AddHandler(this);
+		if (my_app->Lock()) {
+			my_app->AddHandler(this);
+			my_app->Unlock();
+		}
 		fMessenger = new BMessenger(kRenderAppSignature, renderTeam);
 
 		fLink.renderBoy = renderTeam;
