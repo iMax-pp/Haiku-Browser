@@ -19,6 +19,7 @@ const static uint32 kMsgStartRenderApp = 'strt';
 const static uint32 kMsgUpdate = 'updt';
 const static uint32 kMsgBitmapData = 'bmdt';
 const static uint32 kMsgForward = 'frwd';
+const static uint32 kMsgLeaveRenderApp = 'leav';
 
 const static uint32 kMsgManageBookmarks = 'mgbk';
 const static uint32 kMsgOpenBookmark = 'opbk';

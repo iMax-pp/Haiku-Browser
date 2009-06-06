@@ -18,8 +18,13 @@
 #include <Window.h>
 #include <View.h>
 
+#include <ext/hash_set>
+
 #include "RenderView.h"
 
+using __gnu_cxx::hash;
+
+typedef __gnu_cxx::hash_set< int32, hash<int32> > ProxyViewSet;
 
 class RenderBoy : public BApplication {
 	public:
@@ -31,13 +36,14 @@ class RenderBoy : public BApplication {
 		void Pulse();
 		bool QuitRequested();
   private:
-		bool _PrepareRenderMessage(BMessage *message);
+		bool _PrepareRenderMessage(BMessage *message, int32 proxyID);
 
 		bool fStartMsgReceived;
 		BMessenger *fMessenger;
 		BRect fRenderFrame;
 		BBitmap *fRenderBitmap;
 		RenderView *fRenderView;
+		ProxyViewSet fProxyViewSet;
 
 		BWindow *fDebugWindow;
 		BView *fDebugView;

@@ -10,12 +10,10 @@
 #ifndef TRANQUILITY_H
 #define TRANQUILITY_H
 
-
 #include <Application.h>
 
-// #include <stdio.h>
-
 #include "BrowserWindow.h"
+#include "RenderAppManager.h"
 
 
 class Tranquility : public BApplication {
@@ -28,11 +26,11 @@ class Tranquility : public BApplication {
 		void ReadyToRun();
 		bool QuitRequested();
 
-		BList *ChannelList();
+		RenderAppManager* GetRenderAppManager();
 
   private:
 		BrowserWindow *fBrowserWindow;
-		BList *fChannelList;
+		RenderAppManager *fRenderAppManager;
 };
 
 

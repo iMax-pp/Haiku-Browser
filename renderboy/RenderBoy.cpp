@@ -82,15 +82,21 @@ RenderBoy::MessageReceived(BMessage *message)
 				if (message->FindInt32("teamID", &browserTeam) == B_OK) {
 					sprintf(str, "RenderBoy: got a browser team ID of %d", browserTeam);
 					syslog(LOG_DEBUG, str);
-					status_t error;
-					fMessenger = new BMessenger(kBrowserAppSignature, browserTeam, &error);
-					if (error == B_OK)
-						// Only set this if everything needed was received correctly
-						fStartMsgReceived = true;
-					else {
-						sprintf(str, 
-							"RenderBoy: could not create a valid BMessenger to the browser, error was %d!", error);
+					int32 proxyID;
+					if (message->FindInt32("proxyID", &proxyID) == B_OK) {
+						sprintf(str, "RenderBoy: got a first proxy view ID of %d", proxyID);
 						syslog(LOG_DEBUG, str);
+						fProxyViewSet.insert(proxyID);
+						status_t error;
+						fMessenger = new BMessenger(kBrowserAppSignature, browserTeam, &error);
+						if (error == B_OK)
+							// Only set this if everything needed was received correctly
+							fStartMsgReceived = true;
+						else {
+							sprintf(str, 
+								"RenderBoy: could not create a valid BMessenger to the browser, error was %d!", error);
+							syslog(LOG_DEBUG, str);
+						}
 					}
 				}
 			}
@@ -100,8 +106,10 @@ RenderBoy::MessageReceived(BMessage *message)
 		case kMsgUpdate:
 		{
 			syslog(LOG_DEBUG, "RenderBoy: received kMsgUpdate message");
+			int32 proxyID;
+			message->FindInt32("proxyID", &proxyID);
 			BMessage reply;
-			if (_PrepareRenderMessage(&reply));
+			if (_PrepareRenderMessage(&reply, proxyID));
 				message->SendReply(&reply);
 			break;
 		}
@@ -146,6 +154,14 @@ RenderBoy::MessageReceived(BMessage *message)
 			break;
 		}
 
+		case kMsgLeaveRenderApp:
+		{
+			int32 proxyID;
+			message->FindInt32("proxyID", &proxyID);
+			fProxyViewSet.erase(proxyID);
+			break;
+		}
+
 		case B_SOME_APP_QUIT:
 		{
 			BString sig;
@@ -169,8 +185,11 @@ void
 RenderBoy::Pulse()
 {
 	BMessage update;
-	if (_PrepareRenderMessage(&update) && fMessenger);
-		fMessenger->SendMessage(&update);
+	ProxyViewSet::iterator id;
+	for (id = fProxyViewSet.begin(); id != fProxyViewSet.end(); id++) {
+		if (_PrepareRenderMessage(&update, *id) && fMessenger);
+			fMessenger->SendMessage(&update);
+	}
 }
 
 
@@ -184,7 +203,7 @@ RenderBoy::QuitRequested()
 
 
 bool
-RenderBoy::_PrepareRenderMessage(BMessage *out)
+RenderBoy::_PrepareRenderMessage(BMessage *out, int32 proxyID)
 {
 	bool result = false;
 
@@ -202,6 +221,8 @@ RenderBoy::_PrepareRenderMessage(BMessage *out)
 
 			fRenderBitmap->Unlock();
 		}
+
+		out->AddInt32("proxyID", proxyID);
 
 		// Display what was drawn for debugging
 		if (fDebugWindow->Lock()) {

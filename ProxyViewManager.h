@@ -10,36 +10,30 @@
 #ifndef PROXY_VIEW_MANAGER_H
 #define PROXY_VIEW_MANAGER_H
 
-#include <Handler.h>
-#include <Messenger.h>
+#include "ProxyView.h"
 
+#include <ext/hash_map>
 
-class ProxyViewManager;
+using __gnu_cxx::hash;
 
-typedef struct Channel {
-	int32 renderBoy;
-	ProxyViewManager *proxyViewManager;
-} Channel;
+typedef __gnu_cxx::hash_map< int32, ProxyView*, hash<int32> > MapIntPtr;
 
-class BrowserWindow;
-
-class ProxyView;
-
-class ProxyViewManager : public BHandler {
+class ProxyViewManager {
 	public:
-		ProxyViewManager(ProxyView *proxyView, BrowserWindow *browserWindow);
-		~ProxyViewManager();
+		ProxyViewManager();
+		virtual ~ProxyViewManager();
 
-		void MessageReceived(BMessage *message);
+		void AddProxyView(ProxyView *proxyView);
+		void RemoveProxyView(ProxyView *proxyView);
 
-		void Run();
-		void Quit();
+		ProxyView* GetProxyFromID(int32 proxyID);
+		int32 GetIDFromProxy(ProxyView *proxyView);
+
+		int32 GetID();
 
 	private:
-		BMessenger *fMessenger;
-		ProxyView *fProxyView;
-		BrowserWindow *fBrowserWindow;
-		Channel fLink;
+		MapIntPtr fProxyViewList;
+		int32 fCurrentProxyID;
 };
 
 #endif // PROXY_VIEW_MANAGER_H

@@ -12,8 +12,6 @@
 
 #include <View.h>
 
-#include "ProxyViewManager.h"
-
 
 class ProxyView : public BView {
 	public:
@@ -25,15 +23,17 @@ class ProxyView : public BView {
 		void MouseDown(BPoint point);
 		void MouseMoved(BPoint point, uint32 transit, const BMessage* message);
 
-		void StartRenderBoy();
-		void StopRenderBoy();
+		void GetRenderBoy();
 
 		void DrawSadTab(const char *error);
+
+		int32 ID();
+		void SetID(int32 id);
 
 	private:
 		void _ForwardCurrentMessage();
 
-		ProxyViewManager *fProxyViewManager;
+		int32 fID;
 };
 
 #endif	// PROXY_VIEW_H

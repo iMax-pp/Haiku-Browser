@@ -9,12 +9,10 @@
 
 #include "Tranquility.h"
 #include "AppSignatures.h"
-#include "BrowserWindow.h"
 #include "Constants.h"
 
 #include <Alert.h>
 #include <Roster.h>
-#include <String.h>
 
 #ifdef DEBUG
 #include "LeakTracker.h"
@@ -22,14 +20,14 @@
 
 Tranquility::Tranquility()
 	: BApplication(kBrowserAppSignature),
-	fChannelList(new BList())
+	fRenderAppManager(new RenderAppManager())
 {
 }
 
 
 Tranquility::~Tranquility()
 {
-	delete fChannelList;
+	delete fRenderAppManager;
 }
 
 
@@ -56,40 +54,12 @@ void
 Tranquility::MessageReceived(BMessage *message)
 {
 	switch(message->what) {
+		case kMsgForward:
+		case kMsgUpdate:
 		case kMsgBitmapData:
-		{
-			Channel *link;
-			team_id renderTeam;
-			renderTeam = message->ReturnAddress().Team();
-			for (int32 i = 0; i < fChannelList->CountItems(); i++) {
-				link = static_cast<Channel *>(fChannelList->ItemAt(i));
-				if (link->renderBoy == renderTeam) {
-					link->proxyViewManager->MessageReceived(message);
-					break;
-				}
-			}
-			break;
-		}
-
 		case B_SOME_APP_QUIT:
-		{
-			BString sig;
-			if (message->FindString("be:signature", &sig) == B_OK) {
-				if (sig.Compare(kRenderAppSignature) == 0) {
-					Channel *link;
-					team_id renderTeam;
-					message->FindInt32("be:team", &renderTeam);
-					for (int32 i = 0; i < fChannelList->CountItems(); i++) {
-						link = static_cast<Channel *>(fChannelList->ItemAt(i));
-						if (link->renderBoy == renderTeam) {
-							link->proxyViewManager->MessageReceived(message);
-							break;
-						}
-					}
-				}
-			}
+			fRenderAppManager->MessageReceived(message);
 			break;
-		}
 
 		default:
 			BApplication::MessageReceived(message);
@@ -102,25 +72,17 @@ bool
 Tranquility::QuitRequested()
 {
 	be_roster->StopWatching(be_app_messenger);
-
-	Channel *link;
-	for (int32 i = 0; i < fChannelList->CountItems(); i++) {
-		link = static_cast<Channel *>(fChannelList->ItemAt(i));
-		link->renderBoy = -1;
-		link->proxyViewManager->Quit();
-		delete link->proxyViewManager;
-	}
+	fRenderAppManager->Quit();
 
 	return true;
 }
 
 
-BList*
-Tranquility::ChannelList()
+RenderAppManager*
+Tranquility::GetRenderAppManager()
 {
-	return fChannelList;
+	return fRenderAppManager;
 }
-
 
 //	#pragma mark -
 

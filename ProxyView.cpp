@@ -9,8 +9,8 @@
 
 #include "ProxyView.h"
 #include "BitmapHelper.h"
-#include "BrowserWindow.h"
 #include "Constants.h"
+#include "Tranquility.h"
 
 #include <syslog.h>
 
@@ -55,20 +55,10 @@ ProxyView::MouseMoved(BPoint point, uint32 transit, const BMessage* message)
 
 
 void
-ProxyView::StartRenderBoy()
+ProxyView::GetRenderBoy()
 {
-	fProxyViewManager = new ProxyViewManager(this, dynamic_cast<BrowserWindow *>(Window()));
-	fProxyViewManager->Run();
+	my_app->GetRenderAppManager()->RenderBoyRequest(this);
 }
-
-
-void
-ProxyView::StopRenderBoy()
-{
-	fProxyViewManager->Quit();
-	delete fProxyViewManager;
-}
-
 
 void
 ProxyView::DrawSadTab(const char *error)
@@ -100,11 +90,25 @@ ProxyView::DrawSadTab(const char *error)
 }
 
 
+int32
+ProxyView::ID()
+{
+	return fID;
+}
+
+
+void
+ProxyView::SetID(int32 id)
+{
+	fID = id;
+}
+
+
 void
 ProxyView::_ForwardCurrentMessage()
 {
 	BMessage forward(kMsgForward);
 	forward.AddMessage("original", Window()->CurrentMessage());
-	be_app->PostMessage(&forward, fProxyViewManager);
+	forward.AddInt32("proxyID", fID);
+	be_app->PostMessage(&forward);
 }
-
