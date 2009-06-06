@@ -10,6 +10,8 @@ Application Tranquility :
 	BrowserWindow.cpp
 	ProxyViewManager.cpp
 	ProxyView.cpp
+	Tab.cpp
+	TabBar.cpp
 	Tranquility.cpp
 
 	: be translation libicon.a libwalter.so
