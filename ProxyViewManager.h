@@ -23,13 +23,10 @@ class ProxyViewManager {
 		ProxyViewManager();
 		virtual ~ProxyViewManager();
 
-		void AddProxyView(ProxyView *proxyView);
-		void RemoveProxyView(ProxyView *proxyView);
+		int32 AddProxyView(ProxyView *proxyView);
+		void RemoveProxyView(int32 proxyID);
 
 		ProxyView* GetProxyFromID(int32 proxyID);
-		int32 GetIDFromProxy(ProxyView *proxyView);
-
-		int32 GetID();
 
 	private:
 		MapIntPtr fProxyViewList;

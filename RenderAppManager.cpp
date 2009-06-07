@@ -78,6 +78,25 @@ RenderAppManager::MessageReceived(BMessage *message)
 			break;
 		}
 
+		case kMsgRequestRenderApp:
+		{
+			void *ptr;
+			message->FindPointer("proxyView", &ptr);
+			ProxyView *proxyView = static_cast<ProxyView *>(ptr);
+			int32 proxyID = fProxyViewManager->AddProxyView(proxyView);
+			RenderBoyRequest(proxyID);
+			break;
+		}
+
+		case kMsgLeaveRenderApp:
+		{
+			int32 proxyID;
+			message->FindInt32("proxyID", &proxyID);
+			LeaveRenderBoy(proxyID);
+			fProxyViewManager->RemoveProxyView(proxyID);
+			break;
+		}
+
 		case B_SOME_APP_QUIT:
 		{
 			BString sig;
@@ -117,23 +136,26 @@ RenderAppManager::Quit()
 }
 
 
-team_id
-RenderAppManager::StartRenderBoy(BMessage startMsg)
+status_t
+RenderAppManager::StartRenderBoy(BMessage startMsg, team_id *renderTeam)
 {
-	team_id renderTeam;
-	if (be_roster->Launch(kRenderAppSignature, &startMsg, &renderTeam) != B_OK)
-		syslog(LOG_DEBUG, "RenderAppManager: There was an error trying to launch the render process!");
-	return renderTeam;
+	status_t error;
+	error = be_roster->Launch(kRenderAppSignature, &startMsg, renderTeam);
+
+	return error;
 }
 
 
 void
 RenderAppManager::StopRenderBoy(team_id renderTeam)
 {
-	MapIntInt::iterator it;
-	for (it = fMapProxyToRender.end(); it != fMapProxyToRender.begin(); ++it) {
+	MapIntInt::iterator it = fMapProxyToRender.begin();
+
+	while (it != fMapProxyToRender.end()) {
 		if (it->second == renderTeam)
 			fMapProxyToRender.erase(it);
+		else
+			it++;
 	}
 
 	BMessenger(kRenderAppSignature, renderTeam).SendMessage(B_QUIT_REQUESTED);
@@ -141,22 +163,23 @@ RenderAppManager::StopRenderBoy(team_id renderTeam)
 
 
 void
-RenderAppManager::RenderBoyRequest(ProxyView *proxyView)
+RenderAppManager::RenderBoyRequest(int32 proxyID)
 {
 	team_id renderTeam;
-	fProxyViewManager->AddProxyView(proxyView);
-	int32 proxyID = fProxyViewManager->GetIDFromProxy(proxyView);
-		// Something may be done to avoid multiple RenderBoys per ProxyView
+	ProxyView *proxyView = fProxyViewManager->GetProxyFromID(proxyID);
 
 	if (true) {
 		// For the moment each time a ProxyView needs a RenderBoy,
 		// a RenderBoy is started. This isn't the expected behaviour.
 		BMessage startMsg(kMsgStartRenderApp);
-		startMsg.AddRect("renderFrame", proxyView->Bounds());
+		startMsg.AddRect("renderFrame", proxyView->Window()->Bounds());
 		startMsg.AddInt32("teamID", my_app->Team());
 		startMsg.AddInt32("proxyID", proxyID);
 
-		renderTeam = StartRenderBoy(startMsg);
+		if (StartRenderBoy(startMsg, &renderTeam) != B_OK) {
+			syslog(LOG_DEBUG, "RenderAppManager: There was an error trying to launch the render process!");
+			proxyView->DrawSadTab("Error trying to launch the render process!");
+		}
 	}
 
 	fMapProxyToRender[proxyID] = renderTeam;

@@ -30,9 +30,9 @@ class RenderAppManager : public BHandler {
 		void MessageReceived(BMessage *message);
 		void Quit();
 
-		team_id StartRenderBoy(BMessage startMsg);
+		status_t StartRenderBoy(BMessage startMsg, team_id *renderTeam);
 		void StopRenderBoy(team_id renderTeam);
-		void RenderBoyRequest(ProxyView *proxyView);
+		void RenderBoyRequest(int32 proxyID);
 		void LeaveRenderBoy(int32 proxyID);
 
 	private:

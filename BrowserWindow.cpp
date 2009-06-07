@@ -32,8 +32,6 @@ BrowserWindow::BrowserWindow()
 
 	AddShortcut('N', B_COMMAND_KEY, new BMessage(kMsgNewTab), this);
 	AddShortcut('W', B_COMMAND_KEY, new BMessage(kMsgCloseTab), this);
-
-	fProxyView->GetRenderBoy();
 }
 
 
@@ -47,7 +45,6 @@ BrowserWindow::MessageReceived(BMessage *message)
 {
 	switch (message->what) {
 		case kMsgNewTab:
-			fProxyView->GetRenderBoy();
 			break;
 
 		case kMsgCloseTab:

@@ -21,19 +21,21 @@ ProxyViewManager::~ProxyViewManager()
 }
 
 
-void
+int32
 ProxyViewManager::AddProxyView(ProxyView *proxyView)
 {
 	fCurrentProxyID++;
 	fProxyViewList[fCurrentProxyID] = proxyView;
 	proxyView->SetID(fCurrentProxyID);
+
+	return fCurrentProxyID;
 }
 
 
 void
-ProxyViewManager::RemoveProxyView(ProxyView *proxyView)
+ProxyViewManager::RemoveProxyView(int32 proxyID)
 {
-	fProxyViewList.erase(proxyView->ID());
+	fProxyViewList.erase(proxyID);
 }
 
 
@@ -41,11 +43,4 @@ ProxyView*
 ProxyViewManager::GetProxyFromID(int32 proxyID)
 {
 	return fProxyViewList[proxyID];
-}
-
-
-int32
-ProxyViewManager::GetIDFromProxy(ProxyView *proxyView)
-{
-	return proxyView->ID();
 }

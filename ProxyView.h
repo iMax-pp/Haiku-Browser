@@ -23,11 +23,8 @@ class ProxyView : public BView {
 		void MouseDown(BPoint point);
 		void MouseMoved(BPoint point, uint32 transit, const BMessage* message);
 
-		void GetRenderBoy();
-
 		void DrawSadTab(const char *error);
 
-		int32 ID();
 		void SetID(int32 id);
 
 	private:

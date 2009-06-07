@@ -57,6 +57,8 @@ Tranquility::MessageReceived(BMessage *message)
 		case kMsgForward:
 		case kMsgUpdate:
 		case kMsgBitmapData:
+		case kMsgRequestRenderApp:
+		case kMsgLeaveRenderApp:
 		case B_SOME_APP_QUIT:
 			fRenderAppManager->MessageReceived(message);
 			break;
@@ -77,12 +79,6 @@ Tranquility::QuitRequested()
 	return true;
 }
 
-
-RenderAppManager*
-Tranquility::GetRenderAppManager()
-{
-	return fRenderAppManager;
-}
 
 //	#pragma mark -
 

@@ -18,11 +18,17 @@
 ProxyView::ProxyView(BRect frame, const char *name)
 	: BView(frame, name, B_FOLLOW_ALL_SIDES, B_WILL_DRAW|B_FRAME_EVENTS)
 {
+	BMessage requestRenderApp(kMsgRequestRenderApp);
+	requestRenderApp.AddPointer("proxyView", (void *)this);
+	be_app->PostMessage(&requestRenderApp);
 }
 
 
 ProxyView::~ProxyView()
 {
+	BMessage leaveRenderApp(kMsgLeaveRenderApp);
+	leaveRenderApp.AddInt32("proxyID", fID);
+	be_app->PostMessage(&leaveRenderApp);
 }
 
 
@@ -55,12 +61,6 @@ ProxyView::MouseMoved(BPoint point, uint32 transit, const BMessage* message)
 
 
 void
-ProxyView::GetRenderBoy()
-{
-	my_app->GetRenderAppManager()->RenderBoyRequest(this);
-}
-
-void
 ProxyView::DrawSadTab(const char *error)
 {
 	BBitmap *sadTab = RetrieveBitmap("sad_tab.png", BRect(0, 0, 255, 255));
@@ -87,13 +87,6 @@ ProxyView::DrawSadTab(const char *error)
 
 		Window()->Unlock();
 	}
-}
-
-
-int32
-ProxyView::ID()
-{
-	return fID;
 }
 
 
