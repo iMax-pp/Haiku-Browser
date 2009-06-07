@@ -109,7 +109,8 @@ RenderBoy::MessageReceived(BMessage *message)
 			int32 proxyID;
 			message->FindInt32("proxyID", &proxyID);
 			BMessage reply;
-			if (_PrepareRenderMessage(&reply, proxyID));
+			reply.AddInt32("proxyID", proxyID);
+			if (_PrepareRenderMessage(&reply));
 				message->SendReply(&reply);
 			break;
 		}
@@ -154,6 +155,14 @@ RenderBoy::MessageReceived(BMessage *message)
 			break;
 		}
 
+		case kMsgAddProxyToRenderApp:
+		{
+			int32 proxyID;
+			message->FindInt32("proxyID", &proxyID);
+			fProxyViewSet.insert(proxyID);
+			break;
+		}
+
 		case kMsgLeaveRenderApp:
 		{
 			int32 proxyID;
@@ -185,11 +194,13 @@ void
 RenderBoy::Pulse()
 {
 	BMessage update;
-	ProxyViewSet::iterator id;
-	for (id = fProxyViewSet.begin(); id != fProxyViewSet.end(); id++) {
-		if (_PrepareRenderMessage(&update, *id) && fMessenger);
+	if (_PrepareRenderMessage(&update) && fMessenger);
+		ProxyViewSet::iterator id;
+		for (id = fProxyViewSet.begin(); id != fProxyViewSet.end(); id++) {
+			update.AddInt32("proxyID", *id);
 			fMessenger->SendMessage(&update);
-	}
+			update.RemoveName("proxyID");
+		}
 }
 
 
@@ -203,7 +214,7 @@ RenderBoy::QuitRequested()
 
 
 bool
-RenderBoy::_PrepareRenderMessage(BMessage *out, int32 proxyID)
+RenderBoy::_PrepareRenderMessage(BMessage *out)
 {
 	bool result = false;
 
@@ -221,8 +232,6 @@ RenderBoy::_PrepareRenderMessage(BMessage *out, int32 proxyID)
 
 			fRenderBitmap->Unlock();
 		}
-
-		out->AddInt32("proxyID", proxyID);
 
 		// Display what was drawn for debugging
 		if (fDebugWindow->Lock()) {

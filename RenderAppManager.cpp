@@ -54,7 +54,7 @@ RenderAppManager::MessageReceived(BMessage *message)
 			ProxyView *proxyView = fProxyViewManager->GetProxyFromID(proxyID);
 			syslog(LOG_DEBUG, "RenderAppManager: received kMsgBitmapData message");
 			BBitmap *bitmap = dynamic_cast<BBitmap*>(BBitmap::Instantiate(message));
-			if (bitmap != NULL) {
+			if (bitmap != NULL && proxyView != NULL) {
 				if (proxyView->Window()->Lock()) {
 					proxyView->SetViewBitmap(bitmap);
 					proxyView->Window()->Unlock();
@@ -191,12 +191,13 @@ void
 RenderAppManager::LeaveRenderBoy(int32 proxyID)
 {
 	team_id renderTeam = fMapProxyToRender[proxyID];
-	fMapProxyToRender.erase(proxyID);
-	fMapRenderToProxy[renderTeam].erase(proxyID);
 
 	BMessage leaveMsg(kMsgLeaveRenderApp);
 	leaveMsg.AddInt32("proxyID", proxyID);
 	BMessenger(kRenderAppSignature, renderTeam).SendMessage(&leaveMsg);
+
+	fMapProxyToRender.erase(proxyID);
+	fMapRenderToProxy[renderTeam].erase(proxyID);
 
 	if (fMapRenderToProxy[renderTeam].empty()) {
 		StopRenderBoy(renderTeam);

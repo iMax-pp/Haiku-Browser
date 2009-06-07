@@ -36,7 +36,7 @@ class RenderBoy : public BApplication {
 		void Pulse();
 		bool QuitRequested();
   private:
-		bool _PrepareRenderMessage(BMessage *message, int32 proxyID);
+		bool _PrepareRenderMessage(BMessage *message);
 
 		bool fStartMsgReceived;
 		BMessenger *fMessenger;

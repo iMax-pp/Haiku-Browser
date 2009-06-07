@@ -20,6 +20,7 @@ const static uint32 kMsgUpdate = 'updt';
 const static uint32 kMsgBitmapData = 'bmdt';
 const static uint32 kMsgForward = 'frwd';
 const static uint32 kMsgRequestRenderApp = 'rqra';
+const static uint32 kMsgAddProxyToRenderApp = 'aptr';
 const static uint32 kMsgLeaveRenderApp = 'lvra';
 
 const static uint32 kMsgManageBookmarks = 'mgbk';
