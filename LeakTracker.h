@@ -7,7 +7,12 @@
 
 #ifdef DEBUG
 
-#include <list>
+#if __GNUC__ > 2
+	#include <string.h>
+	using namespace std;
+#endif
+
+#include <vector>
 
 typedef struct {
 	int	address;
@@ -16,7 +21,7 @@ typedef struct {
 	int	line;
 } ALLOC_INFO;
 
-typedef list<ALLOC_INFO*> AllocList;
+typedef vector<ALLOC_INFO*> AllocList;
 
 AllocList *allocList;
 
@@ -43,11 +48,11 @@ void RemoveTrack(int addr)
 	if (!allocList)
 		return;
 
-	for (i = allocList->begin(); i != allocList->end(); i++)
+	for (i = allocList->begin(); i < allocList->end(); i++)
 	{
 		if((*i)->address == addr)
 		{
-			allocList->remove((*i));
+			allocList->erase(i);
 			break;
 		}
 	}
@@ -79,7 +84,7 @@ void DumpUnfreed()
 	if (!allocList)
 		return;
 
-	for (i = allocList->begin(); i != allocList->end(); i++) {
+	for (i = allocList->begin(); i < allocList->end(); i++) {
 		sprintf(buf, "%-50s:\t\tLINE %d,\t\tADDRESS %d\t%d unfreed\n",
 				(*i)->file, (*i)->line, (*i)->address, (int)(*i)->size);
 		OutputDebugString(buf);
