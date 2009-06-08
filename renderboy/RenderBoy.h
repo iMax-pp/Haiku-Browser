@@ -18,13 +18,17 @@
 #include <Window.h>
 #include <View.h>
 
-#include <ext/hash_set>
-
 #include "RenderView.h"
 
-using __gnu_cxx::hash;
-
-typedef __gnu_cxx::hash_set< int32, hash<int32> > ProxyViewSet;
+#if __GNUC__ > 2
+	#include <ext/hash_set>
+	using __gnu_cxx::hash;
+	typedef __gnu_cxx::hash_set< int32, hash<int32> > ProxyViewSet;
+#else
+	#include <hash_set>
+	using std::hash;
+	typedef hash_set< int32, hash<int32> > ProxyViewSet;
+#endif
 
 class RenderBoy : public BApplication {
 	public:

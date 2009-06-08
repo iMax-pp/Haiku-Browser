@@ -14,13 +14,21 @@
 
 #include <Handler.h>
 
-#include <ext/hash_map>
 #include <set>
 
-using __gnu_cxx::hash;
+#if __GNUC__ > 2
+	#include <ext/hash_map>
+	using __gnu_cxx::hash;
 
-typedef __gnu_cxx::hash_map< int32, int32, hash<int32> > MapIntInt;
-typedef __gnu_cxx::hash_map< int32, std::set<int32>, hash<int32> > MapIntVecInt;
+	typedef __gnu_cxx::hash_map< int32, int32, hash<int32> > MapIntInt;
+	typedef __gnu_cxx::hash_map< int32, std::set<int32>, hash<int32> > MapIntVecInt;
+#else
+	#include <hash_map>
+	using std::hash;
+
+	typedef hash_map< int32, int32, hash<int32> > MapIntInt;
+	typedef hash_map< int32, std::set<int32>, hash<int32> > MapIntVecInt;
+#endif
 
 class RenderAppManager : public BHandler {
 	public:
