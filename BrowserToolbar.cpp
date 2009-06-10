@@ -7,43 +7,47 @@
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#include "BitmapHelper.h"
 #include "BrowserToolbar.h"
-
-#include <ToolbarButton.h>
-#include <ToolbarSeparator.h>
-
+#include "BitmapHelper.h"
 #include "Constants.h"
 
+// #include <BitmapButton.h>
+#include <Button.h>
+#include <GroupLayout.h>
+#include <GroupLayoutBuilder.h>
+
 BrowserToolbar::BrowserToolbar()
-	: WToolbar(BRect(0, 0, 1, 1), "main toolbar")
+	: BView("main toolbar", B_WILL_DRAW)
 {
-	BBitmap *icon = RetrieveBitmap("back.png");
-	WToolbarButton *button = new WToolbarButton("Back", "Back", icon, new BMessage(kMsgNavBack));
-	AddItem(button, 0, W_TOOLBAR_LAST_POSITION);
-
-	icon = RetrieveBitmap("forward.png");
-	button = new WToolbarButton("Forward", "Forward", icon, new BMessage(kMsgNavForward));
-	AddItem(button, 0, W_TOOLBAR_LAST_POSITION);
-
-	icon = RetrieveBitmap("reload.png");
-	button = new WToolbarButton("Reload", "Reload", icon, new BMessage(kMsgNavReload));
-	AddItem(button, 0, W_TOOLBAR_LAST_POSITION);
-
-	icon = RetrieveBitmap("home.png");
-	button = new WToolbarButton("Home", "Home", icon, new BMessage(kMsgNavHome));
-	AddItem(button, 0, W_TOOLBAR_LAST_POSITION);
-
-	AddItem(new WToolbarSeparator(), 0, W_TOOLBAR_LAST_POSITION);
-
-	icon = RetrieveBitmap("stop.png");
-	button = new WToolbarButton("Stop", "Stop", icon, new BMessage(kMsgNavStop));
-	AddItem(button, 0, W_TOOLBAR_LAST_POSITION);
-
-	SetLabelPosition(W_TOOLBAR_LABEL_NONE);
+	_DrawViews();
 }
 
 
 BrowserToolbar::~BrowserToolbar()
 {
+}
+
+
+void
+BrowserToolbar::_DrawViews()
+{
+	BButton *back = new BButton("back", "Back", new BMessage(kMsgNavBack));
+	BButton *forward = new BButton("forward", "Forward", new BMessage(kMsgNavForward));
+	BButton *reload = new BButton("reload", "Reload", new BMessage(kMsgNavReload));
+	BButton *home = new BButton("home", "Home", new BMessage(kMsgNavHome));
+	fLocationBar = new BTextControl("location bar", NULL, "about:blank", new BMessage(kMsgNavURL));
+	BButton *stop = new BButton("stop", "Stop", new BMessage(kMsgNavStop));
+
+	// Set the layout
+	SetLayout(new BGroupLayout(B_HORIZONTAL));
+
+	AddChild(BGroupLayoutBuilder(B_HORIZONTAL, 1)
+		.Add(back)
+		.Add(forward)
+		.Add(reload)
+		.Add(home)
+		.Add(fLocationBar)
+		.Add(stop)
+		.SetInsets(1, 1, 1, 0)
+	);
 }

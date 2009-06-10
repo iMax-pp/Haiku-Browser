@@ -10,14 +10,19 @@
 #ifndef BROWSER_TOOLBAR_H
 #define BROWSER_TOOLBAR_H
 
-#include <Toolbar.h>
+#include <View.h>
 
-class BrowserToolbar : public WToolbar {
+#include <TextControl.h>
+
+class BrowserToolbar : public BView {
 	public:
 		BrowserToolbar();
 		virtual ~BrowserToolbar();
 
 	private:
+		void _DrawViews();
+
+		BTextControl *fLocationBar;
 };
 
 #endif // BROWSER_TOOLBAR_H
