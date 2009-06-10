@@ -12,6 +12,7 @@
 
 #include <View.h>
 
+#include <BitmapButton.h>
 #include <TextControl.h>
 
 class BrowserToolbar : public BView {
@@ -19,9 +20,12 @@ class BrowserToolbar : public BView {
 		BrowserToolbar();
 		virtual ~BrowserToolbar();
 
+		void ChangeGoStopButton(bool loading);
+
 	private:
 		void _DrawViews();
 
+		BitmapButton *fGoStopButton;
 		BTextControl *fLocationBar;
 };
 

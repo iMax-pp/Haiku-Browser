@@ -50,6 +50,18 @@ BrowserWindow::MessageReceived(BMessage *message)
 		case kMsgCloseTab:
 			break;
 
+		case kMsgNavGoURL:
+			fToolbar->ChangeGoStopButton(true);
+			break;
+
+		case kMsgNavReload:
+			fToolbar->ChangeGoStopButton(true);
+			break;
+
+		case kMsgNavStop:
+			fToolbar->ChangeGoStopButton(false);
+			break;
+
 		default:
 			BWindow::MessageReceived(message);
 			break;

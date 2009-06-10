@@ -13,12 +13,12 @@
 #include <Resources.h>
 
 static BBitmap*
-RetrieveBitmap(const char *name, BRect rect = BRect(0, 0, 15, 15))
+RetrieveBitmap(int32 id, BRect rect = BRect(0, 0, 63, 63))
 {
 	BResources *resource = BApplication::AppResources();
 	size_t size = 0;
 
-	const void *data = resource->LoadResource('TBBM', name, &size);
+	const void *data = resource->LoadResource('VICN', id, &size);
 	if (!data)
 		return NULL;
 

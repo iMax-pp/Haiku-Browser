@@ -9,6 +9,7 @@
 
 #include "ProxyView.h"
 #include "BitmapHelper.h"
+#include "BrowserIcons.h"
 #include "Constants.h"
 #include "Tranquility.h"
 
@@ -63,7 +64,7 @@ ProxyView::MouseMoved(BPoint point, uint32 transit, const BMessage* message)
 void
 ProxyView::DrawSadTab(const char *error)
 {
-	BBitmap *sadTab = RetrieveBitmap("sad_tab.png", BRect(0, 0, 255, 255));
+	BBitmap *sadTab = RetrieveBitmap(kSadTabBitmap, BRect(0, 0, 255, 255));
 
 	if (Window()->Lock()) {
 		MovePenTo(Bounds().Width() / 2 - 127, Bounds().Height() / 2 - 177);

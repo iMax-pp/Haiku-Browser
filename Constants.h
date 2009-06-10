@@ -10,7 +10,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-
 // Message constants
 const static uint32 kMsgStartRenderApp = 'strt';
 	// Used as the message constant to a message sent when launching the render
@@ -31,7 +30,7 @@ const static uint32 kMsgNavForward = 'forw';
 const static uint32 kMsgNavReload = 'relo';
 const static uint32 kMsgNavHome = 'home';
 const static uint32 kMsgNavStop = 'stop';
-const static uint32 kMsgNavURL = 'nurl';
+const static uint32 kMsgNavGoURL = 'urlg';
 
 const static uint32 kMsgNewTab = 'open';
 const static uint32 kMsgCloseTab = 'clos';
