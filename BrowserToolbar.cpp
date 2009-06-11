@@ -11,6 +11,7 @@
 #include "BitmapHelper.h"
 #include "BrowserIcons.h"
 #include "Constants.h"
+#include "ToolbarView.h"
 
 #include <GroupLayout.h>
 #include <GroupLayoutBuilder.h>
@@ -51,27 +52,37 @@ BrowserToolbar::ChangeReloadStopButton(bool loading)
 void
 BrowserToolbar::_DrawViews()
 {
+	// Back
 	BBitmap *iconUp = RetrieveBitmap(kBackIconUp, fIconSize);
 	BBitmap *iconDown = RetrieveBitmap(kBackIconDown, fIconSize);
+
 	BitmapButton *back = new BitmapButton(BRect(0, 0, 1, 1), "Back",
 		iconUp, iconDown, new BMessage(kMsgNavBack));
+
 	back->SetExplicitMinSize(BSize(fIconSize.Width(), fIconSize.Height()));
 	back->SetExplicitMaxSize(BSize(fIconSize.Width(), fIconSize.Height()));
 
+	// Forward
 	iconUp  = RetrieveBitmap(kForwardIconUp, fIconSize);
 	iconDown = RetrieveBitmap(kForwardIconDown, fIconSize);
+
 	BitmapButton *forward = new BitmapButton(BRect(0, 0, 1, 1), "Forward",
 		iconUp, iconDown, new BMessage(kMsgNavForward));
+
 	forward->SetExplicitMinSize(BSize(fIconSize.Width(), fIconSize.Height()));
 	forward->SetExplicitMaxSize(BSize(fIconSize.Width(), fIconSize.Height()));
 
+	// Reload - Stop
 	iconUp = RetrieveBitmap(kReloadIconUp, fIconSize);
 	iconDown = RetrieveBitmap(kReloadIconDown, fIconSize);
+
 	fReloadStopButton = new BitmapButton(BRect(0, 0, 1, 1), "Reload",
 		iconUp, iconDown, new BMessage(kMsgNavReload));
+
 	fReloadStopButton->SetExplicitMinSize(BSize(fIconSize.Width(), fIconSize.Height()));
 	fReloadStopButton->SetExplicitMaxSize(BSize(fIconSize.Width(), fIconSize.Height()));
 
+	// Location bar
 	fLocationBar = new BTextControl("location bar", NULL, "about:blank", new BMessage(kMsgNavGoURL));
 
 	font_height fontHeight;
@@ -79,19 +90,26 @@ BrowserToolbar::_DrawViews()
 	float height = fontHeight.descent + fontHeight.ascent + fontHeight.leading;
 	BSize locationBarSize;
 	locationBarSize.SetHeight(height + 10);
+
 	fLocationBar->SetExplicitMinSize(locationBarSize);
 	fLocationBar->SetExplicitMaxSize(locationBarSize);
 
+	// Go
 	iconUp = RetrieveBitmap(kGoIconUp, fIconSize);
 	iconDown = RetrieveBitmap(kGoIconDown, fIconSize);
+
 	BitmapButton *go = new BitmapButton(BRect(0, 0, 1, 1), "Go",
 		iconUp, iconDown, new BMessage(kMsgNavGoURL));
+
 	go->SetExplicitMinSize(BSize(fIconSize.Width(), fIconSize.Height()));
 	go->SetExplicitMaxSize(BSize(fIconSize.Width(), fIconSize.Height()));
 
 	// Set the layout
 	SetLayout(new BGroupLayout(B_HORIZONTAL));
-	AddChild(BGroupLayoutBuilder(B_HORIZONTAL, 5)
+
+	ToolbarView *view = new ToolbarView();
+
+	AddChild(BGroupLayoutBuilder(view)
 		.Add(back)
 		.Add(forward)
 		.Add(fReloadStopButton)

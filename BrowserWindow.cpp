@@ -22,10 +22,13 @@ BrowserWindow::BrowserWindow()
 	fToolbar = new BrowserToolbar();
 	fProxyView = new ProxyView(Bounds(), "Proxy");
 
+	BGroupView *view = new BGroupView(B_VERTICAL, 10);
+	view->SetViewColor(255, 255, 255);
+
 	// Set the layout
 	SetLayout(new BGroupLayout(B_HORIZONTAL));
 
-	AddChild(BGroupLayoutBuilder(B_VERTICAL, 10)
+	AddChild(BGroupLayoutBuilder(view)
 		.Add(fToolbar)
 		.Add(fProxyView)
 	);

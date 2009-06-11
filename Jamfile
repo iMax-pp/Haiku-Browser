@@ -13,6 +13,7 @@ Application Tranquility :
 	RenderAppManager.cpp
 	Tab.cpp
 	TabBar.cpp
+	ToolbarView.cpp
 	Tranquility.cpp
 
 	: be translation libicon.a libwalter.so
