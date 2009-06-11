@@ -20,13 +20,14 @@ class BrowserToolbar : public BView {
 		BrowserToolbar();
 		virtual ~BrowserToolbar();
 
-		void ChangeGoStopButton(bool loading);
+		void ChangeReloadStopButton(bool loading);
 
 	private:
 		void _DrawViews();
 
-		BitmapButton *fGoStopButton;
+		BitmapButton *fReloadStopButton;
 		BTextControl *fLocationBar;
+		BRect fIconSize;
 };
 
 #endif // BROWSER_TOOLBAR_H

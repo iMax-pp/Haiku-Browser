@@ -51,15 +51,15 @@ BrowserWindow::MessageReceived(BMessage *message)
 			break;
 
 		case kMsgNavGoURL:
-			fToolbar->ChangeGoStopButton(true);
+			fToolbar->ChangeReloadStopButton(true);
 			break;
 
 		case kMsgNavReload:
-			fToolbar->ChangeGoStopButton(true);
+			fToolbar->ChangeReloadStopButton(true);
 			break;
 
 		case kMsgNavStop:
-			fToolbar->ChangeGoStopButton(false);
+			fToolbar->ChangeReloadStopButton(false);
 			break;
 
 		default:
