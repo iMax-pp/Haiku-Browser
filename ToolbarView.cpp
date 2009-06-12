@@ -30,10 +30,10 @@ ToolbarView::Draw(BRect updateRect)
 {
 	BRect rect = Bounds();
 
-	be_control_look->DrawBorder(this, rect, updateRect,
-		ui_color(B_MENU_BACKGROUND_COLOR), B_PLAIN_BORDER, 0,
-		BControlLook::B_BOTTOM_BORDER);
-
 	be_control_look->DrawMenuBarBackground(this, rect, updateRect,
 		ui_color(B_MENU_BACKGROUND_COLOR));
+
+	be_control_look->DrawBorder(this, rect, updateRect,
+		ui_color(B_MENU_BACKGROUND_COLOR), B_FANCY_BORDER, 0,
+		BControlLook::B_BOTTOM_BORDER);
 }

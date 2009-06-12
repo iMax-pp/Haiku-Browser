@@ -23,6 +23,8 @@ class BrowserWindow : public BWindow {
 		void MessageReceived(BMessage *message);
 		bool QuitRequested();
 
+		void FrameResized(float width, float height);
+
 	private:
 		BrowserToolbar *fToolbar;
 		ProxyView *fProxyView;

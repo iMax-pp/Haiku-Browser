@@ -17,7 +17,7 @@
 
 
 BrowserWindow::BrowserWindow()
-	: BWindow(BRect(100, 100, 600, 600), "Tranquility", B_DOCUMENT_WINDOW, 0)
+	: BWindow(BRect(100, 100, 400, 400), "Tranquility", B_DOCUMENT_WINDOW, 0)
 {
 	fToolbar = new BrowserToolbar();
 	fProxyView = new ProxyView(Bounds(), "Proxy");
@@ -32,6 +32,7 @@ BrowserWindow::BrowserWindow()
 		.Add(fToolbar)
 		.Add(fProxyView)
 	);
+	ResizeTo(500, 500);
 
 	AddShortcut('N', B_COMMAND_KEY, new BMessage(kMsgNewTab), this);
 	AddShortcut('W', B_COMMAND_KEY, new BMessage(kMsgCloseTab), this);
@@ -80,3 +81,11 @@ BrowserWindow::QuitRequested()
 	return true;
 }
 
+
+void
+BrowserWindow::FrameResized(float width, float height)
+{
+	BWindow::FrameResized(width, height);
+	if (width < 300)
+		ResizeTo(300, height);
+}
