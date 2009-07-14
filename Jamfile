@@ -16,7 +16,7 @@ Application Tranquility :
 	ToolbarView.cpp
 	Tranquility.cpp
 
-	: be translation libicon.a libwalter.so
+	: be translation libicon.a libwalter.so $(TARGET_LIBSTDC++)
 	: Tranquility.rdef pictures.rdef
 	;
 
@@ -26,7 +26,7 @@ Application RenderBoy :
 	RenderView.cpp
 	RenderBoy.cpp
 
-	: be 
+	: be $(TARGET_LIBSTDC++)
 	: RenderBoy.rdef
 	;
 
@@ -36,7 +36,7 @@ SharedLibrary libbookmark.so :
 	Bookmark.cpp
 	BookmarkManager.cpp
 
-	: be
+	: be $(TARGET_LIBSTDC++)
 	;
 
 # Unit tests
